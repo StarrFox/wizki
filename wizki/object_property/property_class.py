@@ -1,6 +1,6 @@
-from typing import Union
+from typing import Type, Union
 
-from wizki.utils import cached_function, TypedBytes
+from wizki.utils import TypedBytes
 
 
 PRIMITIVE_TYPES = {
@@ -90,26 +90,26 @@ class PropertyClass:
 class Property:
     def __init__(
             self,
-            type_name: str,
+            property_type: Union[str, Type[PropertyClass]],
             *,
             override_name: str,
             flags: int,
     ):
-        if type_name not in PRIMITIVE_TYPES:
-            raise ValueError(f"{type_name} is not a primitive type.")
-
-        self.type_name = type_name
+        self.property_type = property_type
         self.override_name = override_name
         self.flags = flags
 
     # can't use __hash__ since we need the property name
-    # TODO: make sure cached_function works for subclasses
-    @cached_function
+
     def as_hash(self, propery_name: str):
         # long m_test => djb2("m_test") + ki_generic_hash("long")
         name = self.override_name or propery_name
-        # return djb2(name) + PRIMITIVE_TYPES[self.type_name]
-        return 1
+        if issubclass(self.property_type, PropertyClass):
+            pass
+            # return djb2(name) + hash(self.property_type)
+        else:
+            pass
+            # return djb2(name) + PRIMITIVE_TYPES[self.property_type]
 
     def _from_data(self, data_stream: TypedBytes):
         return 1

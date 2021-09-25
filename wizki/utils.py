@@ -1,5 +1,4 @@
 import struct
-from functools import wraps
 from typing import Tuple
 from io import BytesIO
 
@@ -21,23 +20,6 @@ type_format_dict = {
     "float": "<f",
     "double": "<d",
 }
-
-
-def cached_function(func):
-    @wraps(func)
-    def _inner(*args, **kwargs):
-        # can't just check cached_res in case the res is None/False
-        if func.__has_cached:
-            return func.__cached_res
-
-        res = func(*args, **kwargs)
-
-        func.__cached_res = res
-        func.__has_cached = True
-
-        return res
-
-    return _inner
 
 
 class TypedBytes(BytesIO):
