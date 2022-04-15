@@ -1,1 +1,1 @@
-from . import utils, object_property
+from . import utils, kiwad
